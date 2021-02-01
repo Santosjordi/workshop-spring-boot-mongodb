@@ -1,14 +1,17 @@
 package com.jws.workshopmongo.domain;
 
+import com.jws.workshopmongo.dto.AuthorDTO;
+import com.jws.workshopmongo.dto.CommentDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-@Document(collection = "post")
+@Document
 public class Post implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -16,12 +19,15 @@ public class Post implements Serializable {
     private Date date;
     private String title;
     private String body;
+    private AuthorDTO author;
 
-    private User author;
+    private List<CommentDTO> comments = new ArrayList<>();
 
-    public Post() {}
+    public Post() {
+    }
 
-    public Post(String id, Date date, String title, String body, User author) {
+    public Post(String id, Date date, String title, String body, AuthorDTO author) {
+        super();
         this.id = id;
         this.date = date;
         this.title = title;
@@ -61,26 +67,44 @@ public class Post implements Serializable {
         this.body = body;
     }
 
-    public User getAuthor() {
+    public AuthorDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(AuthorDTO author) {
         this.author = author;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Post)) return false;
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
 
-        Post post = (Post) o;
-
-        return getId().equals(post.getId());
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
     }
 
     @Override
     public int hashCode() {
-        return getId().hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Post other = (Post) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 }
